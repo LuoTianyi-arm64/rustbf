@@ -8,9 +8,12 @@ fn main() {
         Ok(a) => a,
         Err(e) => panic!("{e}"),
     };
-    if let Ok(a) = run_bf(&src){
-        for i in a{
-            print!("{}",i);
-        }
+    match run_bf(&src) {
+        Ok(a) => {
+            for i in a{
+                print!("{}",i);
+            }
+        },
+        Err(e) => panic!("{e}"),
     }
 }
