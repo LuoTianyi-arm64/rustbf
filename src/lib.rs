@@ -37,10 +37,11 @@ pub fn run_bf(src: &str) -> Result<Vec<char>, String> {
         } else if ptr == 91 {
             if mem[index] == 0 {
                 let mut nesting = 1;
+                let tmpline = line;
                 while nesting > 0 {
                     line += 1;
                     if line >= src_bytes.len() {
-                        break;
+                        return Err(format!("Unexpected token \"[\" at the character {}. ", tmpline+1).to_string());
                     }
                     if src_bytes[line] == 91 {
                         nesting += 1;
@@ -52,9 +53,10 @@ pub fn run_bf(src: &str) -> Result<Vec<char>, String> {
         } else if ptr == 93 {
             if mem[index] != 0 {
                 let mut nesting = 1;
+                let tmpline = line;
                 while nesting > 0 {
-                    if line == 0 {
-                        break;
+                    if line == 0 && nesting != 0{
+                        return Err(format!("Unexpected token \"]\" at the character {}.", tmpline+1).to_string());
                     }
                     line -= 1;
                     if src_bytes[line] == 93 {
