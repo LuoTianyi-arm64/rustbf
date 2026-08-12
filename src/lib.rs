@@ -10,7 +10,6 @@ pub fn run_bf(src: &str) -> Result<Vec<char>, String> {
     let mut output: Vec<char> = Vec::new();
     while line < src_bytes.len(){
         ptr = src_bytes[line];
-
         if ptr == 62 {
             index += 1;
             if index >= mem.len() {
@@ -25,17 +24,9 @@ pub fn run_bf(src: &str) -> Result<Vec<char>, String> {
                 mem.pop();
             }
         } else if ptr == 43 {
-            if mem[index] == 255{
-                mem[index] = 0;
-            }else {
-                mem[index] += 1;
-            }
+            mem[index] = mem[index].wrapping_add(1);
         } else if ptr == 45 {
-            if mem[index] == 0{
-                mem[index] = 255;
-            }else {
-                mem[index] -= 1;
-            }
+            mem[index] = mem[index].wrapping_sub(1);
         } else if ptr == 46 {
             output.push(mem[index] as char);
         } else if ptr == 44 {
