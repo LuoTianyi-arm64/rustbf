@@ -108,8 +108,8 @@ rustbf = { git = "https://github.com/xiaoxiaoyang-114514/rustbf" }
 
 
 
-## run_bf API 说明
-
+## run_bf API 说明 (重要)
+### 1.
 ```rust
 pub fn run_bf(src: &str) -> Result<Vec<char>, String>
 ```
@@ -127,6 +127,12 @@ let s: String = out.into_iter().collect();
 println!("输出: {}", s);
 ```
 
+**注： 此函数会读取控制台输入。若不想读取控制台，请使用**`run_bf_with_input`
+### 2.
+```rust
+pub fn run_bf_with_input(src: &str, input: Vec<char>) -> Result<Vec<char>, String>
+```
+与`run_bf`基本相同，唯一不同的是参数input，接收一个Vec<char>，里面存储所有bf需要的输入。
 
 ## 贡献与许可
 
