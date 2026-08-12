@@ -1,3 +1,7 @@
+***
+*此文件由AI生成，请仔细甄别*
+***
+
 # rustbf
 
 一个用 Rust 编写的简单 Brainfuck 解释器与库（CLI + lib），适合学习、嵌入或轻量测试 Brainfuck 程序。
