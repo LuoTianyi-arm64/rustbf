@@ -73,6 +73,8 @@ pub fn run_bf(src: &str) -> Result<Vec<char>, String> {
     Ok(output)
 }
 
+
+
 pub fn run_bf_with_input(src: &str, input: Vec<char>) -> Result<Vec<char>, String> {
     let src_bytes = src.as_bytes();
     let mut mem :Vec<u8> = Vec::new();
@@ -148,4 +150,19 @@ pub fn run_bf_with_input(src: &str, input: Vec<char>) -> Result<Vec<char>, Strin
     }
     output.push('\n');
     Ok(output)
+}
+
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn hello_world() {
+        let src = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
+        let out = run_bf_with_input(src, vec![]).unwrap().into_iter().collect::<String>();
+        assert_eq!(out, "Hello World!\n\n");
+    }
 }
