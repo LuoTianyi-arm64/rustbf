@@ -9,7 +9,7 @@ fn main() {
         return;
     }
     if args.len() < 2 {
-        panic!("Too fewer arguments. Expected 1 but {}", args.len()-1);
+        panic!("Too few arguments. Expected 1 but {}", args.len()-1);
     }
     let src = match fs::read_to_string(args[1].clone()) {
         Ok(a) => a,
@@ -20,7 +20,7 @@ fn main() {
     } else if args.len() == 2 {
         run_bf(&src)
     } else if args.len() == 3 && args[2] == "--with-input" {
-        panic!("Too fewer arguments. Expected 2 (--with-input <input>) but {}", args.len()-1);
+        panic!("Too few arguments. Expected 2 (--with-input <input>) but {}", args.len()-1);
     } else {
         panic!("Too many arguments. Expected 1 or 2 but {}", args.len()-1);
     };
