@@ -104,11 +104,13 @@ pub fn run_bf_with_input(src: &str, input: Vec<char>) -> Result<Vec<char>, Strin
         } else if ptr == 46 {
             output.push(mem[index] as char);
         } else if ptr == 44 {
-            if input_index+1 > input.len() {
-                return Err(format!("the index of input is too big. the length of input list is {} but the index is {}", input.len(), input_index));
-            }
-            mem[index] = input[input_index] as u8;
-            input_index += 1;
+            mem[index] = if input_index < input.len() {
+                let byte = input[input_index] as u8;
+                input_index += 1;
+                byte
+            } else {
+                0
+            };
         } else if ptr == 91 {
             if mem[index] == 0 {
                 let mut nesting = 1;

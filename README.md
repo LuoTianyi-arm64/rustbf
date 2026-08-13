@@ -31,7 +31,7 @@ src/
 
 How it fits together:
 
-- `main.rs` 作为命令行入口：解析命令行参数（Brainfuck 源文件路径），读取文件内容并调用 `run_bf`，然后把返回的字符输出到 stdout。
+- `main.rs` 作为命令行入口：解析命令行参数（Brainfuck 源文件路径，可选 `--with-input`），读取文件内容并调用 `run_bf` 或 `run_bf_with_input`，然后把返回的字符输出到 stdout。
 - `lib.rs` 提供了解释器实现并导出 `run_bf`，便于在其他程序中直接复用。
 
 ## 特性与行为摘要
@@ -71,6 +71,21 @@ cargo run -- hello.bf
 ```bash
 # 将文件 input.bin 的内容作为程序 stdin
 cargo run -- hello_with_input.bf < input.bin
+```
+
+也可以使用 `--with-input` 直接以字符列表形式提供输入（此时无需 stdin）：
+
+```bash
+# 提供 '1','2','3' 三个字符作为程序输入
+cargo run -- hello_with_input.bf --with-input '1','2','3'
+```
+
+查看命令行用法：
+
+```bash
+cargo run -- -h
+# 或
+cargo run -- --help
 ```
 
 ## 作为库复用（二次使用 lib.rs）
