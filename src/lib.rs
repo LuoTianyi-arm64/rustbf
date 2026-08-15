@@ -156,6 +156,7 @@ pub fn run_bf_with_input(src: &str, input: Vec<char>) -> Result<Vec<char>, Strin
 
 
 #[cfg(test)]
+//some simple tests
 mod tests {
     use super::*;
 
@@ -164,5 +165,13 @@ mod tests {
         let src = "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
         let out = run_bf_with_input(src, vec![]).unwrap().into_iter().collect::<String>();
         assert_eq!(out, "Hello World!\n\n");
+    }
+    
+    #[test]
+    fn double() {
+        let src = ">,>[-]>[-]<<[->+>+<<]>.>.";
+        let input: Vec<char> = ['a'].to_vec();
+        let out = run_bf_with_input(src, input).unwrap().into_iter().collect::<String>();
+        assert_eq!(out, "aa\n");
     }
 }
