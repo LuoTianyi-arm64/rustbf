@@ -3,8 +3,7 @@ pub fn run_bf(src: &str, input: Option<Vec<char>>) -> Result<Vec<char>, String> 
     let mut input_index = 0;
     let mut stdin_input = std::io::stdin().bytes();
     let src_bytes = src.as_bytes();
-    let mut mem :Vec<u8> = Vec::new();
-    mem.push(0);
+    let mut mem :Vec<u8> = [0].to_vec();
     let mut index = 0;
     let mut line: usize = 0;
     let mut ptr: u8;
