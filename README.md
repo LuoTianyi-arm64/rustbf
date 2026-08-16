@@ -26,20 +26,20 @@ Cargo.toml      # cargo package 配置
 Cargo.lock
 src/
   main.rs       # CLI：从文件读取 BF 源码并调用 run_bf
-  lib.rs        # 解释器实现：pub fn run_bf(src: &str) -> Result<Vec<char>, String>
+  lib.rs        # 解释器实现：pub fn run_bf(src: &str, input: Option<Vec<char>>) -> Result<Vec<char>, String>
 ```
 
 How it fits together:
 
-- `main.rs` 作为命令行入口：解析命令行参数（Brainfuck 源文件路径，可选 `--with-input`），读取文件内容并调用 `run_bf` 或 `run_bf_with_input`，然后把返回的字符输出到 stdout。
+- `main.rs` 作为命令行入口：解析命令行参数（Brainfuck 源文件路径，可选 `--with-input`），读取文件内容并调用 `run_bf`，然后把返回的字符输出到 stdout。
 - `lib.rs` 提供了解释器实现并导出 `run_bf`，便于在其他程序中直接复用。
 
 ## 特性与行为摘要
 
 - 内存模型：使用 `Vec<u8>`，初始包含 1 个字节（值 0）。数据指针从 0 开始，向右移动时会按需扩容；向左移出边界会返回 Err（错误信息为 "the index is negative."）。
 - 算术：对单元使用 `wrapping_add` / `wrapping_sub`，按 `u8` 溢出回绕（wrap-around）。
-- I/O：`,` 指令从标准输入读取字节（阻塞），`.` 指令把当前单元按为 `char` 推入输出向量；`run_bf` 在返回前会在输出末尾追加一个换行符 `'\n'`。
-- 循环 `[]`：通过查找匹配括号实现跳转。当前实现为简单策略：遇到未匹配的括号时不会始终返回明确错误，行为尽量容错但可能导致非预期行为。
+- I/O：`,` 指令优先从 `input` 参数取值；当 `input` 为 `None` 时从标准输入读取字节（阻塞），`.` 指令把当前单元按为 `char` 推入输出向量；`run_bf` 在返回前会在输出末尾追加一个换行符 `'\n'`。
+- 循环 `[]`：通过查找匹配括号实现跳转。遇到未匹配的 `[` 或 `]` 会返回明确的 `Err`（"Unexpected token ..."）。
 
 ## 快速开始（How to run it）
 
@@ -108,7 +108,7 @@ use rustbf::run_bf;
 
 fn main() {
     let program = ">+++."; // 一个简单的 BF 程序
-    match run_bf(program) {
+    match run_bf(program, None) {
         Ok(output_chars) => {
             let s: String = output_chars.into_iter().collect();
             print!("{}", s);
@@ -128,12 +128,13 @@ rustbf = { git = "https://github.com/xiaoxiaoyang-114514/rustbf" }
 
 
 ## lib.rs API 说明 (重要)
-### 1.
 ```rust
-pub fn run_bf(src: &str) -> Result<Vec<char>, String>
+pub fn run_bf(src: &str, input: Option<Vec<char>>) -> Result<Vec<char>, String>
 ```
 
-- 参数：`src` - 包含 Brainfuck 源代码的字符串切片（解释器会忽略非 BF 指令字符）。
+- 参数：
+  - `src` - 包含 Brainfuck 源代码的字符串切片（解释器会忽略非 BF 指令字符）。
+  - `input` - 可选输入，`Some(Vec<char>)` 时 `,` 指令从其中依次取字符；`None` 时从标准输入读取。
 - 返回值：
   - `Ok(Vec<char>)` - 运行结束时产生的输出字符序列（函数会在末尾追加一个换行符 `\n`）。
   - `Err(String)` - 在出现错误时返回，并附带错误信息
@@ -141,17 +142,12 @@ pub fn run_bf(src: &str) -> Result<Vec<char>, String>
 示例：把输出转换为字符串
 
 ```rust
-let out = run_bf(">+.+.").unwrap();
+let out = run_bf(">+.+.", None).unwrap();
 let s: String = out.into_iter().collect();
 println!("输出: {}", s);
 ```
 
-**注： 此函数会读取控制台输入。若不想读取控制台，请使用**`run_bf_with_input`
-### 2.
-```rust
-pub fn run_bf_with_input(src: &str, input: Vec<char>) -> Result<Vec<char>, String>
-```
-与`run_bf`基本相同，唯一不同的是参数input，接收一个Vec<char>，里面存储所有bf需要的输入。在程序嵌入而不是直接运行bf程序建议使用
+**注：当 `input` 为 `None` 时，`run_bf` 遇到 `,` 会读取控制台输入。若不想读取控制台，请传入 `Some(input)`。**
 
 ## 贡献与许可
 

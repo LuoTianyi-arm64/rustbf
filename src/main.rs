@@ -16,9 +16,9 @@ fn main() {
         Err(e) => panic!("{e}"),
     };
     let output = if args.len() == 4 && args[2] == "--with-input" {
-        run_bf_with_input(&src, parse_input(&args[3]))
+        run_bf(&src, Some(parse_input(&args[3])))
     } else if args.len() == 2 {
-        run_bf(&src)
+        run_bf(&src, None)
     } else if args.len() == 3 && args[2] == "--with-input" {
         panic!("Too few arguments. Expected 2 (--with-input <input>) but {}", args.len()-1);
     } else {
