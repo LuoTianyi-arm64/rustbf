@@ -34,7 +34,7 @@ pub fn run_bf(src: &str, input: Option<Vec<char>>) -> Result<Vec<char>, String> 
                 Some(ref list) => {
                     if input_index < list.len() {
                         list[input_index] as u8
-                    }else{
+                    } else {
                         0
                     }
                 },
