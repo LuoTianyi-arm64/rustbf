@@ -1,4 +1,5 @@
 use std::io::Read;
+
 pub fn run_bf(src: &str, input: Option<Vec<char>>) -> Result<Vec<char>, String> {
     let mut input_index = 0;
     let mut stdin_input = std::io::stdin().bytes();
