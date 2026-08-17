@@ -6,16 +6,16 @@ pub fn run_bf(src: &str, input: Option<Vec<char>>) -> Result<Vec<char>, String> 
     let mut mem :Vec<u8> = [0].to_vec();
     let mut index = 0;
     let mut line: usize = 0;
-    let mut ptr: u8;
+    let mut c: u8;
     let mut output: Vec<char> = Vec::new();
     while line < src_bytes.len(){
-        ptr = src_bytes[line];
-        if ptr == 62 {
+        c = src_bytes[line];
+        if c == 62 {
             index += 1;
             if index >= mem.len() {
                 mem.push(0);
             }
-        } else if ptr == 60 {
+        } else if c == 60 {
             if index == 0{
                 return Err("the index is negative.".to_string());
             }
@@ -23,13 +23,13 @@ pub fn run_bf(src: &str, input: Option<Vec<char>>) -> Result<Vec<char>, String> 
             if (mem[index+1] == 0) && (mem.len() == index + 2) {
                 mem.pop();
             }
-        } else if ptr == 43 {
+        } else if c == 43 {
             mem[index] = mem[index].wrapping_add(1);
-        } else if ptr == 45 {
+        } else if c == 45 {
             mem[index] = mem[index].wrapping_sub(1);
-        } else if ptr == 46 {
+        } else if c == 46 {
             output.push(mem[index] as char);
-        } else if ptr == 44 {
+        } else if c == 44 {
             mem[index] = match input {
                 Some(ref list) => {
                     if input_index < list.len() {
@@ -44,7 +44,7 @@ pub fn run_bf(src: &str, input: Option<Vec<char>>) -> Result<Vec<char>, String> 
                 },
             };
             input_index += 1;
-        } else if ptr == 91 {
+        } else if c == 91 {
             if mem[index] == 0 {
                 let mut nesting = 1;
                 let tmpline = line;
@@ -60,7 +60,7 @@ pub fn run_bf(src: &str, input: Option<Vec<char>>) -> Result<Vec<char>, String> 
                     }
                 }
             }
-        } else if ptr == 93 {
+        } else if c == 93 {
             if mem[index] != 0 {
                 let mut nesting = 1;
                 let tmpline = line;
