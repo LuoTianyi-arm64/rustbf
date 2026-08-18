@@ -10,13 +10,13 @@ fn main() {
     }
     if args.len() < 2 {
         eprintln!("Too few arguments. Expected 1 but {}", args.len()-1);
-        sys::process::exit(1);
+        std::process::exit(1);
     }
     let src = match fs::read_to_string(args[1].clone()) {
         Ok(a) => a,
         Err(e) => {
             eprintln!("{e}");
-            sys::process::exit(1);
+            std::process::exit(1);
         },
     };
     let output = if args.len() == 4 && args[2] == "--with-input" {
@@ -25,10 +25,10 @@ fn main() {
         run_bf(&src, None)
     } else if args.len() == 3 && args[2] == "--with-input" {
         eprintln!("Too few arguments. Expected 2 (--with-input <input>) but {}", args.len()-1);
-        sys::process::exit(1);
+        std::process::exit(1);
     } else {
         eprintln!("Too many arguments. Expected 1 or 2 but {}", args.len()-1);
-        sys::process::exit(1);
+        std::process::exit(1);
     };
     match output {
         Ok(a) => {
@@ -38,7 +38,7 @@ fn main() {
         },
         Err(e) => {
             eprintln!("{e}");
-            sys::process::exit(1);
+            std::process::exit(1);
         },
     }
 }
