@@ -36,7 +36,6 @@ pub fn run_bf(src: &str, input: Option<Vec<char>>, stream_opt: bool) -> Result<O
     let mut mem :Vec<u8> = vec![0];
     let mut index = 0;
     let mut line: usize = 0;
-    let mut _index: usize = 0;
     let mut c: u8;
     let mut output: Vec<char> = Vec::new();
     let (left, right) = parentheses_match(&src_bytes);
