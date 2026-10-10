@@ -1,14 +1,15 @@
 use std::io::Read;
-use std::collections::HashMap;
 
-pub fn parentheses_match(code: &[u8]) -> (HashMap<usize, usize>, HashMap<usize, usize>) {
+pub fn parentheses_match(code: &[u8]) -> (Vec<usize>, Vec<usize>) {
     let mut left: Vec<usize> = Vec::new();
     let mut right: Vec<usize> = Vec::new();
     let mut temp: Vec<usize> = Vec::new();
-    let mut out_left: HashMap<usize, usize> = HashMap::new();
-    let mut out_right: HashMap<usize, usize> = HashMap::new();
-    for (i, v) in code.iter().enumerate() {
-        match v {
+    let mut out_left: Vec<usize> = Vec::new();
+    let mut out_right: Vec<usize> = Vec::new();
+    out_left.resize(code.len(), 0);
+    out_right.resize(code.len(), 0);
+    for i in 0..code.len() {
+        match code[i] {
             b'[' => {
                 temp.push(i);
             },
@@ -22,14 +23,14 @@ pub fn parentheses_match(code: &[u8]) -> (HashMap<usize, usize>, HashMap<usize, 
             _ => {},
         }
     }
-    for (l, r) in left.iter().zip(right.iter()) {
-        let _ = out_left.insert(*l, *r);
-        let _ = out_right.insert(*r, *l);
+    for i in 0..left.len() {
+        out_left[left[i]] = right[i];
+        out_right[right[i]] = left[i];
     }
     (out_left, out_right)
 }
 
-pub fn run_bf(src: &str, input: Option<Vec<char>>, stream_opt: bool) -> Result<Option<Vec<char>>, String> {
+pub fn run_bf(src: &str, input: Option<Vec<char>>, stream_opt: bool) -> Result<Option<String>, String> {
     let mut input_index = 0;
     let mut stdin_input = std::io::stdin().bytes();
     let src_bytes = src.as_bytes();
@@ -37,8 +38,9 @@ pub fn run_bf(src: &str, input: Option<Vec<char>>, stream_opt: bool) -> Result<O
     let mut index = 0;
     let mut line: usize = 0;
     let mut c: u8;
-    let mut output: Vec<char> = Vec::new();
+    let mut output: String = String::new();
     let (left, right) = parentheses_match(&src_bytes);
+    
     while line < src_bytes.len(){
         c = src_bytes[line];
         if c == b'>' {
@@ -81,11 +83,11 @@ pub fn run_bf(src: &str, input: Option<Vec<char>>, stream_opt: bool) -> Result<O
             input_index += 1;
         } else if c == b'[' {
             if mem[index] == 0 {
-                line = *left.get(&line).unwrap();
+                line = left[line];
             }
         } else if c == b']' {
             if mem[index] != 0 {
-                line = *right.get(&line).unwrap();
+                line = right[line];
             }
         }
         line += 1;
